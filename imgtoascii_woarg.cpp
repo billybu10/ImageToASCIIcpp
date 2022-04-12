@@ -1,5 +1,7 @@
 #include <iostream>
 #include "CImglib/CImg.h"
+#include <string.h>
+#include <math.h>
 
 using namespace std;
 using namespace cimg_library;
@@ -7,7 +9,10 @@ using namespace cimg_library;
 string outputPath;
 int outputWidth, outputHeight;
 int* arrayGrey;
-char* inputPath = new char[50], charaaray;
+char* inputPath = new char[50];
+string* charArray;
+
+char ASCII_CHARS[12] = {'.', ',', ':', ';', '+', '*', '?', '%', 'S', '#', '@'};
 
 
 void loadData(){
@@ -38,12 +43,26 @@ void cimgProc(){
     }
 }
 
-
+void greyToAscii(){
+    string asciibuff;
+    int numbuff;
+    for (int i = 0; i < outputHeight; i++)
+    {
+        for (int j = 0; j < outputWidth; j++)
+        {
+            numbuff = floor(*(arrayGrey + j + i)/11);
+            asciibuff.push_back(ASCII_CHARS[numbuff]);
+        }
+        *(charArray + i) = asciibuff;
+    }
+}
 
 int main(){
     loadData();
     arrayGrey= new int[outputWidth * outputHeight];
     cimgProc();
+    charArray = new string[outputHeight];
+    greyToAscii();
 
     delete[] arrayGrey;
     delete inputPath;
