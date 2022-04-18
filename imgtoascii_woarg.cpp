@@ -18,7 +18,7 @@ char ASCII_CHARS[12] = {' ', '.', ',', ':', ';', '+', '*', '?', '%', 'S', '#', '
 
 void loadData(){
     cout << "Enter input file path : ";
-    cin >> *inputPath;
+    cin >> inputPath;
     cin.ignore(255,'\n');
     cout << "Enter output file path : ";
     cin >> outputPath;
@@ -31,7 +31,7 @@ void loadData(){
 }
 
 void openAndCimg(){
-    CImg<unsigned char> image("unknown.ppm");
+    CImg<unsigned char> image(inputPath);
     image.resize(outputWidth, outputHeight, 1, 3);
     cimg_forXY(image,x,y) {
         // Separation of channels
@@ -41,7 +41,6 @@ void openAndCimg(){
         // Real weighted addition of channels for gray
         int grayValueWeight = (int)(floor(0.299*R + 0.587*G + 0.114*B));
         // saving píxel values into image information
-        cout<<grayValueWeight<<endl;
         *(arrayGrey + x + y*outputWidth) = grayValueWeight;
     }
 }
