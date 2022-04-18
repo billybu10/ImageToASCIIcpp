@@ -2,6 +2,7 @@
 #include "CImglib/CImg.h"
 #include <string.h>
 #include <math.h>
+#include <fstream>
 
 using namespace std;
 using namespace cimg_library;
@@ -12,7 +13,7 @@ int* arrayGrey;
 char* inputPath = new char[50];
 string* charArray;
 
-char ASCII_CHARS[12] = {'.', ',', ':', ';', '+', '*', '?', '%', 'S', '#', '@'};
+char ASCII_CHARS[12] = {' ', '.', ',', ':', ';', '+', '*', '?', '%', 'S', '#', '@'};
 
 
 void loadData(){
@@ -29,17 +30,19 @@ void loadData(){
     cin >> outputHeight;
 }
 
-void cimgProc(){
-    CImg<unsigned char> image = CImg<>(*inputPath).resize(outputWidth, outputHeight, 1, 3);
+void openAndCimg(){
+    CImg<unsigned char> image("unknown.ppm");
+    image.resize(outputWidth, outputHeight, 1, 3);
     cimg_forXY(image,x,y) {
         // Separation of channels
         int R = (int)image(x,y,0,0);
         int G = (int)image(x,y,0,1);
         int B = (int)image(x,y,0,2);
         // Real weighted addition of channels for gray
-        int grayValueWeight = (int)(0.299*R + 0.587*G + 0.114*B);
+        int grayValueWeight = (int)(floor(0.299*R + 0.587*G + 0.114*B));
         // saving píxel values into image information
-        *(arrayGrey + x + y) = grayValueWeight;
+        cout<<grayValueWeight<<endl;
+        *(arrayGrey + x + y*outputWidth) = grayValueWeight;
     }
 }
 
@@ -50,20 +53,30 @@ void greyToAscii(){
     {
         for (int j = 0; j < outputWidth; j++)
         {
-            numbuff = floor(*(arrayGrey + j + i)/11);
+            numbuff = floor(((*(arrayGrey + j + i*outputWidth))/23));
             asciibuff.push_back(ASCII_CHARS[numbuff]);
         }
         *(charArray + i) = asciibuff;
+        asciibuff = "";
+    }
+}
+
+void goThroughAndOutput(){
+    ofstream outFile;
+    outFile.open(outputPath);
+    for(int i=0; i<outputHeight; i++){
+        cout<< *(charArray + i) <<endl;
+        outFile << *(charArray + i)<< endl;
     }
 }
 
 int main(){
     loadData();
     arrayGrey= new int[outputWidth * outputHeight];
-    cimgProc();
+    openAndCimg();
     charArray = new string[outputHeight];
     greyToAscii();
-
+    goThroughAndOutput();
     delete[] arrayGrey;
     delete inputPath;
     return 0;
