@@ -33,10 +33,11 @@ void loadData(){
     cin >> outputHeight;
 }
 
+//imports format specific libraries
 void checkFormat(){
     string s(inputPath);
-    string::size_type woe = s.find( ".jpeg", 0 );
-    string::size_type wie = s.find( ".jpg", 0 );
+    string::size_type woe = s.find( ".jpeg\0", 0 );
+    string::size_type wie = s.find( ".jpg\0", 0 );
     if ((woe != string::npos)||(wie != string::npos)){
         #define cimg_use_jpeg
     }
