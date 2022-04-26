@@ -111,6 +111,5 @@ int main(int argc, char *argv[]){
     greyToAscii();
     goThroughAndOutput();
     delete[] arrayGrey;
-    delete inputPath;
     return 0;
 }
