@@ -15,10 +15,10 @@ int* arrayGrey;
 char* inputPath = new char[260];
 string* charArray;
 
-//array of chars used in asciiart created by code
+//array of chars used in asciiart, from dimmest to brightest
 char ASCII_CHARS[12] = {' ', '.', ',', ':', ';', '+', '*', '?', '%', 'S', '#', '@'};
 
-//self explanatory
+//load command line arguments
 void loadData(int argc, char *argv[]){
     for (int i = 0; i < argc; ++i){
         switch (i)
@@ -45,7 +45,7 @@ void loadData(int argc, char *argv[]){
     }
 }
 
-//imports format specific libraries
+//imports format specific libraries //i'm editing this after a few years and honestly, this function serves no purpose, macros are analyzed before the actual code compiles, but it will work so... i don't care
 void checkFormat(){
     string s(inputPath);
     string::size_type woe = s.find( ".jpeg\0", 0 );
@@ -84,7 +84,8 @@ void greyToAscii(){
     {
         for (int j = 0; j < outputWidth; j++)
         {
-            numbuff = floor(((*(arrayGrey + j + i*outputWidth))/23));
+            //gets right char for pixels intensity, 20, cause max value of 255/22 is lower than 12, which would go outside the ASCII_CHARS
+            numbuff = floor(((*(arrayGrey + j + i*outputWidth))/22));
             asciibuff.push_back(ASCII_CHARS[numbuff]);
         }
         *(charArray + i) = asciibuff;
